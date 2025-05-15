@@ -20,7 +20,10 @@ public class Role {
     private Long roleId;
 
     @Column(nullable = false, unique = true)
-    private String name; // e.g. ROLE_USER, ROLE_ADMIN
+    private String name;
+
+    @Column(nullable = false)
+    private String description;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts;
