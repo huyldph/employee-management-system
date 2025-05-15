@@ -1,4 +1,4 @@
-package com.example.employeemanagementsystem.config;
+package com.example.employeemanagementsystem.security;
 
 import com.example.employeemanagementsystem.dto.request.IntrospectRequest;
 import com.example.employeemanagementsystem.service.AuthenticationService;

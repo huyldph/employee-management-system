@@ -1,4 +1,4 @@
-package com.example.employeemanagementsystem.config;
+package com.example.employeemanagementsystem.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class SecurityConfig {
     private CustomJwtDecoder customJwtDecoder;
 
     private final String[] PUBLIC_ENDPOINTS = {
-
+        "api/v1/auth/login", "api/v1/auth/register",
     };
 
     @Bean
