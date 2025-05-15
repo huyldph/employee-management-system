@@ -1,4 +1,4 @@
-package com.example.employeemanagementsystem.config;
+package com.example.employeemanagementsystem.security;
 
 import com.example.employeemanagementsystem.dto.ApiResponse;
 import com.example.employeemanagementsystem.exception.ErrorCode;
