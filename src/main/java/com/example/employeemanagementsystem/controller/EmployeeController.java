@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/employee")
@@ -47,5 +48,19 @@ public class EmployeeController {
                 .result(null)
                 .message("Employee deleted successfully")
                 .build();
+    }
+
+    @PostMapping("/avatar")
+    public ApiResponse<EmployeeResponse> uploadAvatar(
+            @RequestParam("file") MultipartFile file) {
+        try {
+            return ApiResponse.<EmployeeResponse>builder()
+                    .result(employeeService.uploadAvatar(file))
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<EmployeeResponse>builder()
+                    .message("Failed to upload avatar: " + e.getMessage())
+                    .build();
+        }
     }
 }

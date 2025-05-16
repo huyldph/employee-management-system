@@ -87,7 +87,7 @@ public class AuthenticationService {
 
         //create JWT claims set
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(account.getUsername())
+                .subject(account.getAccountId().toString())
                 .issuer("https://example.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
