@@ -1,4 +1,4 @@
-package com.example.employeemanagementsystem.dto.request;
+package com.example.employeemanagementsystem.dto.response;
 
 import com.example.employeemanagementsystem.entity.Employee;
 import lombok.*;
@@ -11,15 +11,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterRequest {
-    String username;
-    String password;
+public class EmployeeResponse {
+    Long employeeId;
     String firstName;
     String lastName;
+    Employee.Gender gender;
     String email;
     String phone;
     String address;
     LocalDate dateOfBirth;
-    Employee.Gender gender;
-    Long departmentId;
+    String avatarUrl;
+    LocalDate createdAt;
+    LocalDate updatedAt;
+    Boolean status;
+    String departmentName;
 }

@@ -11,15 +11,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterRequest {
-    String username;
-    String password;
+public class EmployeeRequest {
+    Long employeeId;
     String firstName;
     String lastName;
+    Employee.Gender gender;
     String email;
     String phone;
     String address;
     LocalDate dateOfBirth;
-    Employee.Gender gender;
+    String avatarUrl;
+    Boolean status;
     Long departmentId;
 }

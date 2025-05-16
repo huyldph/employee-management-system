@@ -24,7 +24,7 @@ public class Account {
     private String password; // Mã hóa bằng BCrypt
 
     @OneToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", nullable = false, unique = true)
     private Employee employee;
 
     @ManyToOne

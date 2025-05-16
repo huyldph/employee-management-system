@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 @Service
@@ -67,21 +68,17 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var account = accountRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        boolean isPasswordValid = passwordEncoder.matches(request.getPassword(), account.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), account.getPassword());
 
-        if (!isPasswordValid) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
+        if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         var token = generateToken(account);
 
-        return AuthenticationResponse.builder()
-                .token(token)
-                .authenticated(true)
-                .build();
+        return AuthenticationResponse.builder().token(token).build();
     }
 
     private String generateToken(Account account) {
@@ -93,9 +90,11 @@ public class AuthenticationService {
                 .subject(account.getUsername())
                 .issuer("https://example.com")
                 .issueTime(new Date())
-                .expirationTime(Date.from(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS)))
+                .expirationTime(new Date(
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
+                ))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("role", account.getRole().getName())
+                .claim("scope", buildScope(account))
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -137,5 +136,13 @@ public class AuthenticationService {
         }
 
         return signedJWT;
+    }
+
+    private String buildScope(Account account) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        stringJoiner.add("ROLE_" + account.getRole().getName());
+
+        return stringJoiner.toString();
     }
 }

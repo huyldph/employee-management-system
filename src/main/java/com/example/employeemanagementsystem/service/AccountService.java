@@ -3,6 +3,7 @@ package com.example.employeemanagementsystem.service;
 import com.example.employeemanagementsystem.dto.request.RegisterRequest;
 import com.example.employeemanagementsystem.dto.response.RegisterResponse;
 import com.example.employeemanagementsystem.entity.Account;
+import com.example.employeemanagementsystem.entity.Department;
 import com.example.employeemanagementsystem.entity.Employee;
 import com.example.employeemanagementsystem.entity.Role;
 import com.example.employeemanagementsystem.exception.AppException;
@@ -10,6 +11,7 @@ import com.example.employeemanagementsystem.exception.ErrorCode;
 import com.example.employeemanagementsystem.mapper.AccountMapper;
 import com.example.employeemanagementsystem.mapper.EmployeeMapper;
 import com.example.employeemanagementsystem.repository.AccountRepository;
+import com.example.employeemanagementsystem.repository.DepartmentRepository;
 import com.example.employeemanagementsystem.repository.EmployeeRepository;
 import com.example.employeemanagementsystem.repository.RoleRepository;
 import lombok.AccessLevel;
@@ -27,6 +29,7 @@ public class AccountService {
     AccountRepository accountRepository;
     EmployeeRepository employeeRepository;
     RoleRepository roleRepository;
+    DepartmentRepository departmentRepository;
     AccountMapper accountMapper;
     EmployeeMapper employeeMapper;
     PasswordEncoder passwordEncoder;
@@ -36,7 +39,10 @@ public class AccountService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
+        Department department = departmentRepository.findById(request.getDepartmentId()).get();
+
         Employee employee = employeeMapper.toEmployee(request);
+        employee.setDepartment(department);
         employee.setStatus(true);
         employeeRepository.save(employee);
 
