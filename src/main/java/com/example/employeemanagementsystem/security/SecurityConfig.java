@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "api/v1/auth/login", "api/v1/auth/register"
+            "api/v1/auth/login", "api/v1/auth/register", "/uploads/**"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .requestMatchers(PUBLIC_ENDPOINTS)
                 .permitAll()
 
                 //public endpoints employee
