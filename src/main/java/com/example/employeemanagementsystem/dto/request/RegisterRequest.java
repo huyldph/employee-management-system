@@ -21,4 +21,5 @@ public class RegisterRequest {
     String address;
     LocalDate dateOfBirth;
     Employee.Gender gender;
+    Long departmentId;
 }
