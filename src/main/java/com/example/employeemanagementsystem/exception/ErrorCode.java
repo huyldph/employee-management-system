@@ -12,6 +12,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatusCode.valueOf(400)),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatusCode.valueOf(404)),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatusCode.valueOf(401)),
+    VALIDATION_ERROR(1008, "Validation error", HttpStatusCode.valueOf(400)),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatusCode.valueOf(403));
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
