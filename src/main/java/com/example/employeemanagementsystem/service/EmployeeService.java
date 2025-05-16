@@ -3,6 +3,7 @@ package com.example.employeemanagementsystem.service;
 import com.example.employeemanagementsystem.dto.request.EmployeeRequest;
 import com.example.employeemanagementsystem.dto.response.EmployeeResponse;
 import com.example.employeemanagementsystem.dto.response.PageResponse;
+import com.example.employeemanagementsystem.entity.Account;
 import com.example.employeemanagementsystem.entity.Department;
 import com.example.employeemanagementsystem.entity.Employee;
 import com.example.employeemanagementsystem.exception.AppException;
@@ -18,7 +19,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -72,5 +82,31 @@ public class EmployeeService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         employeeRepository.delete(employee);
+    }
+
+    public EmployeeResponse uploadAvatar(MultipartFile file) throws IOException {
+        Long accountId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Employee employee = account.getEmployee();
+
+        // Tên file duy nhất
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        // Thư mục lưu ảnh
+        String uploadDir = "uploads/avatars/";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) dir.mkdirs();
+
+        // Lưu file
+        Path filepath = Paths.get(uploadDir + filename);
+        Files.write(filepath, file.getBytes());
+
+        // Cập nhật avatarUrl
+        String avatarUrl = "/uploads/avatars/" + filename;
+        employee.setAvatarUrl(avatarUrl);
+        employeeRepository.save(employee);
+
+        return employeeMapper.toEmployeeResponse(employee);
     }
 }
