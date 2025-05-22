@@ -2,7 +2,7 @@ package com.example.employeemanagementsystem.service;
 
 import com.example.employeemanagementsystem.dto.request.RegisterRequest;
 import com.example.employeemanagementsystem.dto.response.RegisterResponse;
-import com.example.employeemanagementsystem.entity.Account;
+import com.example.employeemanagementsystem.entity.UserAccount;
 import com.example.employeemanagementsystem.entity.Department;
 import com.example.employeemanagementsystem.entity.Employee;
 import com.example.employeemanagementsystem.entity.Role;
@@ -43,16 +43,16 @@ public class AccountService {
 
         Employee employee = employeeMapper.toEmployee(request);
         employee.setDepartment(department);
-        employee.setStatus(true);
+        employee.setEmploymentStatus("Đang làm việc");
         employeeRepository.save(employee);
 
-        Role role = roleRepository.findByName("USER");
+        Role role = roleRepository.findByRoleName("EMPLOYEE");
 
-        Account account = accountMapper.toAccount(request);
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setRole(role);
-        account.setEmployee(employee);
+        UserAccount userAccount = accountMapper.toAccount(request);
+        userAccount.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        userAccount.setRole(role);
+        userAccount.setEmployee(employee);
 
-        return accountMapper.toResponse(accountRepository.save(account));
+        return accountMapper.toResponse(accountRepository.save(userAccount));
     }
 }

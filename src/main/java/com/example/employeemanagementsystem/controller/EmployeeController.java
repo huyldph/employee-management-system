@@ -28,7 +28,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    ApiResponse<EmployeeResponse> findById(@PathVariable Long employeeId) {
+    ApiResponse<EmployeeResponse> findById(@PathVariable String employeeId) {
         return ApiResponse.<EmployeeResponse>builder()
                 .result(employeeService.findById(employeeId))
                 .build();
@@ -42,7 +42,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{employeeId}")
-    ApiResponse<Void> delete(@PathVariable Long employeeId) {
+    ApiResponse<Void> delete(@PathVariable String employeeId) {
         employeeService.delete(employeeId);
         return ApiResponse.<Void>builder()
                 .result(null)

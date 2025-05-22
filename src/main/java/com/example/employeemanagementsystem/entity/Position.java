@@ -7,27 +7,20 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "departments")
+@Table(name = "positions")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Department {
+public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "MaPhongBan", length = 50)
-    private String departmentId;
+    @Column(name = "MaChucVu", length = 50)
+    private String positionId;
 
-    @Column(name = "TenPhongBan", nullable = false, length = 255)
-    private String departmentName;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaPhongBanCha")
-    private Department parentDepartment;
-
-    @OneToMany(mappedBy = "parentDepartment", fetch = FetchType.LAZY)
-    private Set<Department> childDepartments;
+    @Column(name = "TenChucVu", nullable = false, length = 255)
+    private String positionName;
 
     @Lob
     @Column(name = "MoTa", columnDefinition = "TEXT")
@@ -39,16 +32,15 @@ public class Department {
     @Column(name = "NguoiTao", length = 100)
     private String createdBy;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
     private Set<Employee> employees;
 
-    @OneToMany(mappedBy = "oldDepartment", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "oldPosition", fetch = FetchType.LAZY)
     private Set<CareerTransition> oldCareerTransitions;
 
-    @OneToMany(mappedBy = "newDepartment", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "newPosition", fetch = FetchType.LAZY)
     private Set<CareerTransition> newCareerTransitions;
 
-    // If NgayTao is managed by DB (e.g. DEFAULT CURRENT_TIMESTAMP)
     @PrePersist
     protected void onCreate() {
         if (createdDate == null) {

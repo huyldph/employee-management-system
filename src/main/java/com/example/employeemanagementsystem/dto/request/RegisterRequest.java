@@ -1,6 +1,5 @@
 package com.example.employeemanagementsystem.dto.request;
 
-import com.example.employeemanagementsystem.entity.Employee;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,6 +19,6 @@ public class RegisterRequest {
     String phone;
     String address;
     LocalDate dateOfBirth;
-    Employee.Gender gender;
-    Long departmentId;
+    String gender;
+    String departmentId;
 }

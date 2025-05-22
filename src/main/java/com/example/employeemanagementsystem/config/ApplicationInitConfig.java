@@ -1,11 +1,13 @@
 package com.example.employeemanagementsystem.config;
 
 import com.example.employeemanagementsystem.constant.PredefinedRole;
-import com.example.employeemanagementsystem.entity.Account;
+import com.example.employeemanagementsystem.entity.Permission;
+import com.example.employeemanagementsystem.entity.UserAccount;
 import com.example.employeemanagementsystem.entity.Employee;
 import com.example.employeemanagementsystem.entity.Role;
 import com.example.employeemanagementsystem.repository.AccountRepository;
 import com.example.employeemanagementsystem.repository.EmployeeRepository;
+import com.example.employeemanagementsystem.repository.PermissionRepository;
 import com.example.employeemanagementsystem.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -36,35 +40,44 @@ public class ApplicationInitConfig {
             prefix = "spring",
             value = "datasource.driverClassName",
             havingValue = "com.mysql.cj.jdbc.Driver")
-    ApplicationRunner applicationRunner(AccountRepository accountRepository, RoleRepository roleRepository, EmployeeRepository employeeRepository) {
+    ApplicationRunner applicationRunner(
+            AccountRepository accountRepository, RoleRepository roleRepository,
+            EmployeeRepository employeeRepository, PermissionRepository permissionRepository) {
         log.info("Initializing application.....");
         return args -> {
             if (accountRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
-                roleRepository.save(Role.builder()
-                        .name(PredefinedRole.USER_ROLE)
-                        .description("User role")
+                Permission read = permissionRepository.save(Permission.builder()
+                        .permissionName("READ_EMPLOYEE")
+                        .description("Read employee")
                         .build());
+                Permission add = permissionRepository.save(Permission.builder()
+                        .permissionName("ADD_EMPLOYEE")
+                        .description("Add employee")
+                        .build());
+                Set<Permission> permissions = Set.of(read, add);
 
                 Role adminRole = roleRepository.save(Role.builder()
-                        .name(PredefinedRole.ADMIN_ROLE)
+                        .roleName(PredefinedRole.ADMIN_ROLE)
                         .description("Admin role")
+                        .isSystemRole(true)
+                        .permissions(permissions)
                         .build());
 
                 Employee employee = employeeRepository.save(Employee.builder()
                         .firstName("Admin")
-                        .lastName("User")
-                        .email("huyldph40152@fpt.edu.vn")
-                        .gender(Employee.Gender.FEMALE)
-                        .status(true)
+                        .lastNamePrefix("User")
+                        .companyEmail("huyldph40152@fpt.edu.vn")
+                        .gender("Nam")
+                        .employmentStatus("Đang làm việc")
                         .build());
 
-                Account account = Account.builder()
+                UserAccount userAccount = UserAccount.builder()
                         .username(ADMIN_USER_NAME)
-                        .password(passwordEncoder.encode(ADMIN_PASSWORD))
+                        .passwordHash(passwordEncoder.encode(ADMIN_PASSWORD))
                         .role(adminRole)
                         .employee(employee)
                         .build();
-                accountRepository.save(account);
+                accountRepository.save(userAccount);
             }
         };
     }

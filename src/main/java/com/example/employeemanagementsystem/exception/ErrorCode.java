@@ -13,6 +13,7 @@ public enum ErrorCode {
     USER_NOT_EXISTED(1005, "User not existed", HttpStatusCode.valueOf(404)),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatusCode.valueOf(401)),
     VALIDATION_ERROR(1008, "Validation error", HttpStatusCode.valueOf(400)),
+    ROLE_NOT_FOUND(1009, "Role not found", HttpStatusCode.valueOf(404)),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatusCode.valueOf(403));
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

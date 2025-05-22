@@ -1,6 +1,5 @@
 package com.example.employeemanagementsystem.dto.response;
 
-import com.example.employeemanagementsystem.entity.Employee;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,7 +14,7 @@ public class EmployeeResponse {
     Long employeeId;
     String firstName;
     String lastName;
-    Employee.Gender gender;
+    String gender;
     String email;
     String phone;
     String address;

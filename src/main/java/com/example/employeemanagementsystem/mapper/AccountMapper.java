@@ -2,12 +2,12 @@ package com.example.employeemanagementsystem.mapper;
 
 import com.example.employeemanagementsystem.dto.request.RegisterRequest;
 import com.example.employeemanagementsystem.dto.response.RegisterResponse;
-import com.example.employeemanagementsystem.entity.Account;
+import com.example.employeemanagementsystem.entity.UserAccount;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    Account toAccount(RegisterRequest accountRequest);
+    UserAccount toAccount(RegisterRequest accountRequest);
 
-    RegisterResponse toResponse(Account account);
+    RegisterResponse toResponse(UserAccount userAccount);
 }

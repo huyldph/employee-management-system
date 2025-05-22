@@ -3,7 +3,7 @@ package com.example.employeemanagementsystem.service;
 import com.example.employeemanagementsystem.dto.request.EmployeeRequest;
 import com.example.employeemanagementsystem.dto.response.EmployeeResponse;
 import com.example.employeemanagementsystem.dto.response.PageResponse;
-import com.example.employeemanagementsystem.entity.Account;
+import com.example.employeemanagementsystem.entity.UserAccount;
 import com.example.employeemanagementsystem.entity.Department;
 import com.example.employeemanagementsystem.entity.Employee;
 import com.example.employeemanagementsystem.exception.AppException;
@@ -60,7 +60,7 @@ public class EmployeeService {
                 .build();
     }
 
-    public EmployeeResponse findById(Long id) {
+    public EmployeeResponse findById(String id) {
         return employeeMapper.toEmployeeResponse(employeeRepository.findById(id).orElseThrow());
     }
 
@@ -77,7 +77,7 @@ public class EmployeeService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(Long id) {
+    public void delete(String id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -85,10 +85,10 @@ public class EmployeeService {
     }
 
     public EmployeeResponse uploadAvatar(MultipartFile file) throws IOException {
-        Long accountId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
-        Account account = accountRepository.findById(accountId)
+        String accountId = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserAccount userAccount = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        Employee employee = account.getEmployee();
+        Employee employee = userAccount.getEmployee();
 
         // Tên file duy nhất
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
